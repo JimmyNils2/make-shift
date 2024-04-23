@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Calendar } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -12,12 +12,13 @@ import { FloatingDeleteButton } from '../components/FloatingDeleteButton';
 
 
 export const CalendarPage = () => {
-  const {events, setActiveEvent} = useCalendarStore();
+  const {events, setActiveEvent, startLoadingEvents} = useCalendarStore();
   const {openDateModal} = useUiStore();
   const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'month')
 
-  const eventStyleGetter = (event, start, end, isSelected) => {
+  const eventStyleGetter = () => {
 
+    // TODO change color for current user events 
     const style = {
       backgroundColor: '#347CF7',
       borderRadius: '0px',
@@ -42,7 +43,12 @@ export const CalendarPage = () => {
 
   const onViewChanged = (event) => {
     localStorage.setItem('lastView', event);
+    setLastView(event);
   }
+
+  useEffect(() => {
+    startLoadingEvents()
+  }, [])
 
   return (
     <>

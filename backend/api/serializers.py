@@ -15,6 +15,6 @@ class UserSerializer(serializers.ModelSerializer):
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = ['id', 'title', 'description', 'start', 'end', 'createdBy']
+        fields = ['id','title', 'description', 'start', 'end', 'createdBy']
         extra_kwargs = {'createdBy': {'read_only': True}}
     

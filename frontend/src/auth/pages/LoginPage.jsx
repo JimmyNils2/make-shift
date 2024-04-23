@@ -33,6 +33,7 @@ export const LoginPage = () => {
       return;
     }
     startRegister({username: registerUsername, password: registerPassword});
+
   }
 
   useEffect(() => {

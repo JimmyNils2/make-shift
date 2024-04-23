@@ -1,7 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { api } from '../api';
-import { ACCESS_TOKEN, REFRESH_TOKEN } from '../constants';
+import { ACCESS_TOKEN, REFRESH_TOKEN, USER_NAME } from '../constants';
 import { clearErrorMessage, onChecking, onLogin, onLogout } from '../store';
+import { jwtDecode } from 'jwt-decode';
 
 export const useAuthStore = () => {
 
@@ -14,6 +15,7 @@ export const useAuthStore = () => {
       const { data } = await api.post('/api/token/', { username, password });
       localStorage.setItem(ACCESS_TOKEN, data.access);
       localStorage.setItem(REFRESH_TOKEN, data.refresh);
+      localStorage.setItem(USER_NAME, username);
       dispatch(onLogin({ username }));
     } catch (e) {
       dispatch(onLogout('Invalid credentials'));
@@ -26,15 +28,52 @@ export const useAuthStore = () => {
   const startRegister = async ({ username, password }) => {
     dispatch(onChecking());
     try {
-      const { data } = await api.post('/api/user/register/', {username, password});
-      console.log({data});
-      dispatch(onLogin({username}));
-    }catch(e){
+      await api.post('/api/user/register/', { username, password });
+      const { data } = await api.post('/api/token/', { username, password });
+      localStorage.setItem(USER_NAME, username);
+      localStorage.setItem(ACCESS_TOKEN, data.access);
+      localStorage.setItem(REFRESH_TOKEN, data.refresh);
+      dispatch(onLogin({ username }));
+    } catch (e) {
       dispatch(onLogout(e.response.data?.username[0]));
       setTimeout(() => {
         dispatch(clearErrorMessage());
       }, 10);
     }
+  }
+
+  const refreshToken = async () => {
+    const refreshToken = localStorage.getItem(REFRESH_TOKEN);
+    try {
+      const { data, status } = await api.post("/api/token/refresh/", {
+        refresh: refreshToken
+      });
+
+      if (status === 200) {
+        localStorage.setItem(ACCESS_TOKEN, data.access);
+        dispatch(onLogin({username: localStorage.getItem(USER_NAME)}));
+      } else {
+        dispatch(onLogout({}));
+      }
+    } catch (e) {
+      dispatch(onLogout({}));
+    }
+  }
+
+  const checkAuthToken = async () => {
+    const token = localStorage.getItem(ACCESS_TOKEN);
+    if (!token) return dispatch(onLogout());
+
+    const decoded = jwtDecode(token);
+    const tokenExpiration = decoded.exp;
+    const now = Date.now() / 1000;
+    if (tokenExpiration < now) await refreshToken();
+    else dispatch(onLogin({username: localStorage.getItem(USER_NAME)}));
+  }
+
+  const startLogout = () => {
+    localStorage.clear();
+    dispatch(onLogout());
   }
 
   return {
@@ -45,6 +84,8 @@ export const useAuthStore = () => {
 
     // Methods
     startLogin,
-    startRegister
+    startRegister,
+    checkAuthToken,
+    startLogout
   }
 }
