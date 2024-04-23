@@ -1,0 +1,17 @@
+.fab, .fab-danger{
+  border-radius: 100%;
+  bottom: 25px;
+  font-size: 30px;
+  padding: 15px;
+  position: fixed;
+  z-index: 100;
+  width: 65px;
+  height: 65px;
+}
+.fab{
+  right: 25px;
+}
+.fab-danger{
+  padding: 0;
+  left:25px;
+}
