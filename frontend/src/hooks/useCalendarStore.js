@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import { api } from '../api';
+import { UID } from '../constants';
 import { dateFormatting } from '../helpers';
 import { onAddNewEvent, onDeleteEvent, onSetActiveEvent, onUpdateEvent, onLoadEvents } from '../store';
 
@@ -17,8 +18,8 @@ export const useCalendarStore = () => {
   const startSavingEvent = async (calendarEvent) => {
     try {
       if(calendarEvent.id) {
-        await api.put(`/api/my-events/${calendarEvent.id}/`, calendarEvent);
-        dispatch(onUpdateEvent({...calendarEvent}));
+        const {data} = await api.put(`/api/events/${activeEvent.id}/`, calendarEvent);
+        dispatch(onUpdateEvent({...calendarEvent, id: data.id, createdBy: localStorage.getItem(UID)}));
         return;
       }
       const {user, ...rest} = calendarEvent;
@@ -29,7 +30,7 @@ export const useCalendarStore = () => {
         end: rest.end.toISOString().replace(/\+\d+\:\d+/g, 'Z')
       });
   
-      dispatch(onAddNewEvent({...calendarEvent, id: data.id}));
+      dispatch(onAddNewEvent({...calendarEvent, id: data.id, createdBy: localStorage.getItem(UID)}));
     } catch (e) {
       console.log(e);
       Swal.fire('Saving Error', e.message, 'error');

@@ -41,7 +41,8 @@ export const CalendarModal = () => {
     return (formValues.title.length > 0)
       ? ''
       : 'is-invalid'
-  }, [formValues.title, formSubmitted])
+  }, [formValues.title, formSubmitted]);
+
 
   useEffect(() => {
     if(activeEvent !== null) setFormValues({...activeEvent})
@@ -72,11 +73,14 @@ export const CalendarModal = () => {
     const difference = differenceInSeconds(formValues.end, formValues.start);
 
     if (isNaN(difference) || difference <= 0) {
-      Swal.fire('Invalid dates', 'Check the dates entered.', 'error')
+      Swal.fire('Invalid dates', 'Check the dates entered.', 'error');
       console.log('Invalid dates');
       return;
     }
-
+    if (formValues.description.length <= 0) {
+      Swal.fire('Invalid dates', 'Check the dates entered.', 'error');
+      return;
+    }
     if (formValues.title.length <= 0) return;
 
     await startSavingEvent(formValues);
@@ -106,10 +110,11 @@ export const CalendarModal = () => {
             autoComplete="off"
             value={formValues.title}
             onChange={onInputChanged}
+            required
           />
           <small id="emailHelp" className="form-text text-muted">Description</small>
         </div>
-        <div className="form-group mb-2">
+        <div className={`form-group mb-2`}>
           <textarea
             type="text"
             className="form-control"
@@ -118,6 +123,7 @@ export const CalendarModal = () => {
             name="description"
             value={formValues.description}
             onChange={onInputChanged}
+            required
           ></textarea>
           <small id="emailHelp" className="form-text text-muted"></small>
         </div>

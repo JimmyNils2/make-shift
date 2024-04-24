@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { api } from '../api';
-import { ACCESS_TOKEN, REFRESH_TOKEN, USER_NAME } from '../constants';
-import { clearErrorMessage, onChecking, onLogin, onLogout } from '../store';
+import { ACCESS_TOKEN, REFRESH_TOKEN, USER_NAME, UID } from '../constants';
+import { clearErrorMessage, onChecking, onLogin, onLogout, onLogoutCalendar } from '../store';
 import { jwtDecode } from 'jwt-decode';
 
 export const useAuthStore = () => {
@@ -17,11 +17,21 @@ export const useAuthStore = () => {
       localStorage.setItem(REFRESH_TOKEN, data.refresh);
       localStorage.setItem(USER_NAME, username);
       dispatch(onLogin({ username }));
+      startGettingDetails();
     } catch (e) {
       dispatch(onLogout('Invalid credentials'));
       setTimeout(() => {
         dispatch(clearErrorMessage());
       }, 10);
+    }
+  }
+
+  const startGettingDetails = async () => {
+    try {
+      const {data} = await api.get('/api/my-details/');
+      localStorage.setItem(UID, data.id);
+    } catch (e) {
+      console.log(e);
     }
   }
 
@@ -34,6 +44,7 @@ export const useAuthStore = () => {
       localStorage.setItem(ACCESS_TOKEN, data.access);
       localStorage.setItem(REFRESH_TOKEN, data.refresh);
       dispatch(onLogin({ username }));
+      startGettingDetails();
     } catch (e) {
       dispatch(onLogout(e.response.data?.username[0]));
       setTimeout(() => {
@@ -51,7 +62,7 @@ export const useAuthStore = () => {
 
       if (status === 200) {
         localStorage.setItem(ACCESS_TOKEN, data.access);
-        dispatch(onLogin({username: localStorage.getItem(USER_NAME)}));
+        dispatch(onLogin({ username: localStorage.getItem(USER_NAME) }));
       } else {
         dispatch(onLogout({}));
       }
@@ -68,12 +79,13 @@ export const useAuthStore = () => {
     const tokenExpiration = decoded.exp;
     const now = Date.now() / 1000;
     if (tokenExpiration < now) await refreshToken();
-    else dispatch(onLogin({username: localStorage.getItem(USER_NAME)}));
+    else dispatch(onLogin({ username: localStorage.getItem(USER_NAME) }));
   }
 
   const startLogout = () => {
     localStorage.clear();
     dispatch(onLogout());
+    dispatch(onLogoutCalendar());
   }
 
   return {

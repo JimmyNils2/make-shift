@@ -5,6 +5,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 
 import { Navbar, CalendarEvent, CalendarModal, FloatingAddButton } from '../';
+import { UID } from '../../constants';
 import { localizer } from '../../helpers';
 import { useUiStore, useCalendarStore } from '../../hooks';
 import { FloatingDeleteButton } from '../components/FloatingDeleteButton';
@@ -14,13 +15,15 @@ import { FloatingDeleteButton } from '../components/FloatingDeleteButton';
 export const CalendarPage = () => {
   const {events, setActiveEvent, startLoadingEvents} = useCalendarStore();
   const {openDateModal} = useUiStore();
-  const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'month')
+  const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'month');
 
-  const eventStyleGetter = () => {
+  const eventStyleGetter = (event) => {
 
-    // TODO change color for current user events 
+    // TODO improve the authSlice to obtain uid 
+    const myEvent = (event.createdBy == localStorage.getItem(UID))
+
     const style = {
-      backgroundColor: '#347CF7',
+      backgroundColor: myEvent ? '#347CF7' : '#999',
       borderRadius: '0px',
       opacity: '.8',
       color: 'white'
