@@ -35,4 +35,7 @@ Data storage in PostgreSQL database.
 ## Current status
 Current Status:
 
-The application is currently deployed in production at the following link: https://314b7aea-ba9e-4e77-b02a-fa391ce1d99a.e1-us-cdp-2.choreoapps.dev/. However, it's important to note that the application has a runtime of one hour, after which the database is shut down.
+The application is currently deployed in production at the following [link](https://314b7aea-ba9e-4e77-b02a-fa391ce1d99a.e1-us-cdp-2.choreoapps.dev/). However, it's important to note that the application has a runtime of one hour, after which the database is shut down.
+
+## Demo
+[link](https://drive.google.com/file/d/1U9CGfxkKT55NU5XNdFK2aueCTqiod10g/view?usp=sharing)
