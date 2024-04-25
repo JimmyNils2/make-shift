@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 /**
- * 
+ * Custom hook to handle a form fields
  * @param {object} initialForm, Object with the form fields 
   * @returns {object, function} formState object with the form fields as properties and function onInputChange to update the states 
  */

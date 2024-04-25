@@ -8,6 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import '../../styles/CalendarModal.css';
 import { useCalendarStore, useUiStore } from '../../hooks';
 
+// Set modal styles
 const customStyles = {
   content: {
     top: '50%',
@@ -19,6 +20,7 @@ const customStyles = {
   }
 };
 
+// Set the initial values of the form
 const initialForm = {
   title: '',
   description: '',
@@ -26,15 +28,21 @@ const initialForm = {
   end: addHours(new Date(), .5)
 };
 
+// Set the node element for the modal
 Modal.setAppElement('#root');
 
+/**
+ * Render the form modal
+ * @returns 
+ */
 export const CalendarModal = () => {
 
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formValues, setFormValues] = useState(initialForm);
   const { isDateModalOpen, closeDateModal } = useUiStore();
-  const {activeEvent, startSavingEvent} = useCalendarStore();
+  const { activeEvent, startSavingEvent } = useCalendarStore();
 
+  // Memorize the title
   const titleClass = useMemo(() => {
     if (!formSubmitted) return '';
 
@@ -43,23 +51,24 @@ export const CalendarModal = () => {
       : 'is-invalid'
   }, [formValues.title, formSubmitted]);
 
-
+  // Set the values of the active event to the form
   useEffect(() => {
-    if(activeEvent !== null) setFormValues({...activeEvent})
+    if (activeEvent !== null) setFormValues({ ...activeEvent })
   }, [activeEvent])
 
+  // Close the modal
   const onCloseModal = () => {
-    console.log('Closing modal');
     closeDateModal();
   }
 
+  // Set a new state when the form fields are modified
   const onInputChanged = ({ target }) => {
     setFormValues({
       ...formValues,
       [target.name]: target.value
     });
   }
-
+  // Set a new date value when the date fields are modified
   const onDateChanged = (event, changing) => {
     setFormValues({
       ...formValues,
@@ -67,22 +76,28 @@ export const CalendarModal = () => {
     })
   }
 
+  // Manage the form submission
   const onSubmit = async (event) => {
     event.preventDefault();
     setFormSubmitted(true);
     const difference = differenceInSeconds(formValues.end, formValues.start);
 
+    // Check if the date are valid
     if (isNaN(difference) || difference <= 0) {
       Swal.fire('Invalid dates', 'Check the dates entered.', 'error');
       console.log('Invalid dates');
       return;
     }
+    // Check if the description is valid 
+    // TODO check this code
     if (formValues.description.length <= 0) {
       Swal.fire('Invalid dates', 'Check the dates entered.', 'error');
       return;
     }
+    // Check if the title is valid
     if (formValues.title.length <= 0) return;
 
+    // Send the form values to create a new event
     await startSavingEvent(formValues);
     closeDateModal();
     setFormSubmitted(false);

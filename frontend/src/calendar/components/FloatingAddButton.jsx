@@ -2,11 +2,16 @@ import { addHours } from 'date-fns';
 import { useCalendarStore, useUiStore } from '../../hooks';
 import '../../styles/FloatingButton.css';
 
+/**
+ * Render a floating button
+ * @returns 
+ */
 export const FloatingAddButton = () => {
 
   const { openDateModal } = useUiStore();
   const { setActiveEvent } = useCalendarStore();
 
+  // TODO update this object
   const handleClickButton = () => {
     setActiveEvent({
       title: '',

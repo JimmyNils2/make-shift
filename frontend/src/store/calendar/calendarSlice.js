@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+/**
+ * Create slice to handle the calendar functions and its events
+ */
 export const calendarSlice = createSlice({
   name: "calendar",
   initialState: {
     isLoadingEvents: true,
-    events: [
-      //tempEvent
-    ],
+    events: [],
     activeEvent: null
   },
   reducers: {
@@ -46,8 +47,8 @@ export const calendarSlice = createSlice({
     },
     onLogoutCalendar: (state) => {
       state.isLoadingEvents = true,
-      state.activeEvent = null,
-      state.activeEvent = []
+        state.activeEvent = null,
+        state.activeEvent = []
     }
   }
 });

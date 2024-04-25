@@ -1,10 +1,14 @@
 import { useCalendarStore, useUiStore } from '../../hooks';
 import '../../styles/FloatingButton.css';
 
+/**
+ * Render a floating button 
+ * @returns 
+ */
 export const FloatingDeleteButton = () => {
 
-  const {startDeleteEvent, hasEventSelected} = useCalendarStore();
-  const {isDateModalOpen} = useUiStore();
+  const { startDeleteEvent, hasEventSelected } = useCalendarStore();
+  const { isDateModalOpen } = useUiStore();
   const handleClickButton = () => {
     startDeleteEvent();
   }
@@ -13,7 +17,7 @@ export const FloatingDeleteButton = () => {
     <button
       className="btn btn-danger fab-danger"
       onClick={handleClickButton}
-      style={{display: hasEventSelected && !isDateModalOpen ? '' : 'none'}}
+      style={{ display: hasEventSelected && !isDateModalOpen ? '' : 'none' }}
     >
       <i className="fas fa-trash-alt"></i>
     </button>

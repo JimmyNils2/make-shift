@@ -1,5 +1,9 @@
 import { useAuthStore } from '../../hooks'
 
+/**
+ * Render the navbar component
+ * @returns 
+ */
 export const Navbar = () => {
 
   const { user, startLogout } = useAuthStore();

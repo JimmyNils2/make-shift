@@ -3,6 +3,7 @@ import Swal from 'sweetalert2';
 import { useForm, useAuthStore } from '../../hooks';
 import '../../styles/LoginPage.css';
 
+// Set the initial values of the forms
 const loginFormFields = {
   loginUsername: '',
   loginPassword: ''
@@ -14,34 +15,49 @@ const registerFormFields = {
   registerPassword2: ''
 }
 
+/**
+ * Render the login page
+ * @returns 
+ */
 export const LoginPage = () => {
 
-  const {loginUsername, loginPassword, onInputChange:onLoginInputChange } = useForm(loginFormFields);
-  const {registerUsername, registerPassword, registerPassword2, onInputChange:onRegisterInputChange} = useForm(registerFormFields);
+  const { loginUsername, loginPassword, onInputChange: onLoginInputChange } = useForm(loginFormFields);
+  const { registerUsername, registerPassword, registerPassword2, onInputChange: onRegisterInputChange } = useForm(registerFormFields);
   const { startLogin, startRegister, errorMessage } = useAuthStore();
-  
+
+  /**
+   * Manage the form submission for login
+   * @param {Event} event 
+   */
   const loginSubmit = (event) => {
     event.preventDefault();
-    startLogin({username: loginUsername, password: loginPassword});
+    startLogin({ username: loginUsername, password: loginPassword });
   }
 
+  /**
+   * Manage the form submission for the register
+   * @param {Event} event 
+   * @returns 
+   */
   const registerSubmit = (event) => {
     event.preventDefault();
 
-    if(registerPassword !== registerPassword2){
+    // The if the passwords match
+    if (registerPassword !== registerPassword2) {
       Swal.fire('Creation account failed', 'Please make sure your passwords match')
       return;
     }
-    startRegister({username: registerUsername, password: registerPassword});
-
+    // Register the user
+    startRegister({ username: registerUsername, password: registerPassword });
   }
-
+  // Notify error
+  // TODO improve the UI message
   useEffect(() => {
-    if(errorMessage !== undefined){
+    if (errorMessage !== undefined) {
       Swal.fire('Authentication Error', errorMessage, 'error');
     }
   }, [errorMessage])
-  
+
 
   return (
     <div className="container login-container">
