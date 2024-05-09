@@ -39,3 +39,45 @@ The application is currently deployed in production at the following [link](http
 
 ## Demo
 [link](https://drive.google.com/file/d/1U9CGfxkKT55NU5XNdFK2aueCTqiod10g/view?usp=sharing)
+
+
+## Setting up 
+
+### Backend
+
+```cmd
+  cd backend
+```
+> Move to the backend folder
+
+```cmd
+  pip install -r requirements. txt
+```
+> Install all Python dependencies
+
+```cmd
+  python manage.py runserver
+```
+> Start the Django development server
+
+### Frontend
+
+```cmd
+  cd fronted
+```
+> Move to the fronted folder
+
+```cmd
+  yarn install
+```
+> Install all JavaScript dependencies
+
+```cmd
+  yarn dev
+```
+> Start the React development server
+
+```cmd
+  yarn test
+```
+> Run the unite test for the React application

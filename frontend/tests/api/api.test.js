@@ -16,7 +16,7 @@ describe('api test suite', () => {
 
     // Arrange
     const testToken = {'access': 'testValue'};
-    const testURL = 'testURL'
+    const testURL = 'https://www.google.com'
 
     // Act
     localStorage.setItem('access', testToken.testKey);
